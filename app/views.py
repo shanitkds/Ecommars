@@ -54,8 +54,8 @@ def handil_action(request,id):
         action=request.POST.get('action')
         if action=='cart':
             return add_cart(request,id)
-        elif action=='order':
-            return Checkout(request,"Dirrect",id)
+        # elif action=='order':
+        #     return Checkout(request,"dirrect",id)
             
     return redirect('home')
 # -----------------------------------------------
@@ -187,95 +187,129 @@ def payment_susses(request):
         
     return render(request,'SussesPage.html')
 
-@login_required
-def Checkout(request,buy_type='cart',id=None):
-    item=[]
+
+def cart_checkout(request,id=None):
     totalprice=0
-    type=''
-   
-
-    if buy_type=='Dirrect':
-        type='Dirrect'
-        product=get_object_or_404(Product,id=id)
-        quantity=int(request.POST.get('quantity',1))
-        item.append({
-            'product':product,
-            'quantity':quantity,
-        })
-        request.session['checkout_items']=[{'product_id':product.id,'quantity':quantity,'type':'Dirrect'}]
-    elif buy_type=='cart':
-        type='cart'
-        if id:
-            cart_item=Cart.objects.filter(user=request.user,product_id=id)
-            
-        else:
-            cart_item=Cart.objects.filter(user=request.user)
-        for cart in cart_item:
-            item.append({
-                'product':cart.product,
-                'quantity':cart.quantity,
-            })
-            # request.session['checkout_items']=[{"product_id":i['product'].id,} for i in item]
-            
-    for i in item:
-        totalprice+=i['product'].price*i['quantity']
-        
-    # request.session['checkout_items']=[{"id":i['product'].id} for i in item]
-    request.session['type']=type    
-    return render(request,'Checkout.html',{'item':item,'totalprice':totalprice})
+    if id:
+        cart_item=Cart.objects.filter(user=request.user,product_id=id)
+        mult=False
+        item_id=id
+    else:
+        cart_item=Cart.objects.filter(user=request.user) 
+        mult=True
+        item_id=None
+    for i in cart_item:
+        totalprice+=i.product.price*i.quantity
     
+    return render(request,'Checkout.html',{'item':cart_item,'totalprice':totalprice,'item_id':item_id})
 
 
-def payment_root(request):
-    checkout_items=request.session.get('checkout_items',[])
-    type=request.session.get('type')
-   
+
+def payment_root(request,id=None):
     paymentType=request.POST.get('payment_type')
     if paymentType=='cod':
-        return cod_payment_susses(request)
+        return cod_payment_susses(request,id)
     elif paymentType=='online':
         return buy_from_cart(request)
     
+def cod_payment_susses(request,id=None):
+    if id:
+        cart_item=Cart.objects.filter(user=request.user,product_id=id)
+    else:
+        cart_item=Cart.objects.filter(user=request.user)
+    for item in cart_item:
+        Order.objects.create(
+                user=request.user,
+                product=item.product,
+                quantity=item.quantity,
+                address=request.POST.get('adress'),
+                payment_methd="COD"
+            )
+    return render(request,'SussesPage.html')
+# -------------------------------------------------------------------------------
+
+# @login_required
+# def Checkout(request,buy_type='cart',id=None):
+#     item=[]
+#     totalprice=0
+#     type=''
+#     print(buy_type)
+   
+
+#     if buy_type=='dirrect':
+#         type='dirrect'
+#         product=get_object_or_404(Product,id=id)
+#         quantity=int(request.POST.get('quantity',1))
+#         item.append({
+#             'product':product,
+#             'quantity':quantity,
+#         })
+#         # request.session['checkout_items']=[{'product_id':product.id,'quantity':quantity,'type':'dirrect'}]
+#     elif buy_type=='cart':
+#         type='cart'
+#         if id:
+#             cart_item=Cart.objects.filter(user=request.user,product_id=id)
+#             request.session['checkout_items']=None
+#         else:
+#             cart_item=Cart.objects.filter(user=request.user)
+#         for cart in cart_item:
+#             item.append({
+#                 'product':cart.product,
+#                 'quantity':cart.quantity,
+#             })
+#             # request.session['checkout_items']=[{"product_id":i['product'].id,} for i in item]
+            
+#     for i in item:
+#         totalprice+=i['product'].price*i['quantity']
+        
+#     # request.session['checkout_items']=[{"id":i['product'].id} for i in item]
+#     request.session['type']=type    
+#     return render(request,'Checkout.html',{'item':item,'totalprice':totalprice})
+    
+# --------------------------------------------------------------------
+
+
         
     
     
-def cod_payment_susses(request):             #IT IS COD SUSSES 
-    type=request.session.get('type')
-    checkout_items=request.session.get('checkout_items',[])
-    print(checkout_items)
-    if type=='cart':
-        # for item in checkout_items:
-        #     product=Cart.objects.get(user=request.user,product_id=item['product_id'])
-        #     Order.objects.create(
-        #         user=request.user,
-        #         product=product.product,
-        #         quantity=product.quantity,
-        #         address=request.POST.get('adress'),
-        #         payment_methd="COD"
-        #     )
-        # ----------------------------------------------------------------------------------------
-        if not checkout_items:
-            product=Cart.objects.filter(user=request.user)
-            for item in product:
-                Order.objects.create(
-                user=request.user,
-                product=product.product,
-                quantity=product.quantity,
-                address=request.POST.get('adress'),
-                payment_methd="COD"
-            )
+# def cod_payment_susses(request):             #IT IS COD SUSSES 
+#     type=request.session.get('type')
+#     checkout_items=request.session.get('checkout_items',[])
+#     print(checkout_items)
+#     print(type)
+#     if type=='cart':
+#         # for item in checkout_items:
+#         #     product=Cart.objects.get(user=request.user,product_id=item['product_id'])
+#         #     Order.objects.create(
+#         #         user=request.user,
+#         #         product=product.product,
+#         #         quantity=product.quantity,
+#         #         address=request.POST.get('adress'),
+#         #         payment_methd="COD"
+#         #     )
+#         # ----------------------------------------------------------------------------------------
+#         if not checkout_items:
+#             product=Cart.objects.filter(user=request.user)
+#             for item in product:
+#                 Order.objects.create(
+#                 user=request.user,
+#                 product=product.product,
+#                 quantity=product.quantity,
+#                 address=request.POST.get('adress'),
+#                 payment_methd="COD"
+#             )
             
-    elif type=='Dirrect':
-        id=checkout_items[0]['product_id']
-        quantity=request.session.get('quantity')
-        product=Product.objects.get(user=request.user,id=id)
-        Order.objects.create(
-                user=request.user,
-                product=product.product,
-                quantity=quantity,
-                address=request.POST.get('adress'),
-                payment_methd="COD"
-            )
+#     elif type=='dirrect':
+#         id=checkout_items[0]['product_id']
+#         quantity=request.session.get('quantity')
+#         product=Product.objects.get(user=request.user,id=id)
+#         Order.objects.create(
+#                 user=request.user,
+#                 product=product.product,
+#                 quantity=quantity,
+#                 address=request.POST.get('adress'),
+#                 payment_methd="COD"
+#             )
             
             
-    return render(request,'SussesPage.html')
+#     return render(request,'SussesPage.html')

@@ -31,7 +31,7 @@
             <a href="{% url 'remove' i.id %}">
                 <button>Remove</button>
             </a>
-            <a href="{% url 'checkout_id' i.product_id%}">
+            <a href="{% url 'cart_checkout_id' i.product_id%}">
                 <button>By Now</button>
             </a>
         </div>
@@ -39,7 +39,7 @@
     {% endfor %}
     <div>
         <button>
-            <a href="{% url 'checkout'%}">
+            <a href="{% url 'cart_checkout'%}">
                 Place Order
             </a>
         </button>

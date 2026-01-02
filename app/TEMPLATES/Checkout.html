@@ -1,4 +1,7 @@
 <h1>Check out</h1>
+<form method="post"
+      action="{% if item_id %}{% url 'payment_root_id' item_id %}{% else %}{% url 'payment_root' %}{% endif %}">
+      {%csrf_token%}
 <div>
     {%for product in item%}
             <div>
@@ -18,8 +21,6 @@
             </div>
     {%endfor%}
     <div>
-        <form method="post" action="{% url 'payment_root'%}">
-            {%csrf_token%}
         
             <div>
                 <h1>Delivery Adress</h1>

@@ -18,8 +18,9 @@ urlpatterns=[
     path('payment_susses/',views.payment_susses,name='payment_susses'),
     # -----------------------------------------
     
-    path('checkout_id/<int:id>',views.Checkout,name='checkout_id'),
-    path('checkout',views.Checkout,name='checkout'),
+    path('cart_checkout_id/<int:id>',views.cart_checkout,name='cart_checkout_id'),
+    path('cart_checkout',views.cart_checkout,name='cart_checkout'),
     path('payment_root',views.payment_root,name='payment_root'),
+    path('payment_root_id/<int:id>',views.payment_root,name='payment_root_id'),
     
 ]
