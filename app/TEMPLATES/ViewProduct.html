@@ -1,0 +1,35 @@
+<h1>Products</h1>
+<div>
+    {% for i in products %}
+    <a href="{% url 'uniq_detaild' i.id %}">
+        <div>
+        <div>
+            <div>
+             {% if i.image%} 
+         <div>
+            <img src="{{i.image.url}}" width="100px" height="100px" alt="no">
+         </div>
+        {% else%}
+        <div>
+            No Image
+        </div>
+        {% endif %}
+        </div>
+        <div>{{i.name}}</div>
+        </div>
+        </a>
+        <div>{{i.price}}</div>
+        <div>{{i.brand}}</div>
+        <div>{{i.model}}</div>
+        <form action="{% url 'handil_action' i.id %}" method="post">
+            {% csrf_token %}
+            
+            <div><input type="number" name="quantity" min="1" value="1"></div>
+
+            <button type="submit" name="action" value="cart">Add To Cart</button>
+            <button type="submit" name="action" value="order">Order Now</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+

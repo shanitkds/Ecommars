@@ -1,0 +1,13 @@
+<h1>Brand Search</h1>
+
+<table>
+    {% for i in brand%}
+    <tr>
+        <td>
+            <a href="{% url 'view_product' i %}">
+                {{i}}
+            </a>
+       </td>
+    </tr>
+    {% endfor %}
+</table>

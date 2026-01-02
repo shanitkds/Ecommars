@@ -1,0 +1,25 @@
+<div>
+    <div>
+        {%if product.image %}
+    <div>
+        <img src="{{product.image.url}}" height='100px' width="100px" alt="no">
+    </div>
+    {% else %}
+    <div>No Image</div>
+    {% endif %}
+    </div>
+    <div>
+        <h1>{{product.name}}</h1>
+        <h6>Rating:{{product.rating}}</h6>
+        <h4>price:{{product.price}}</h4>
+        <input type="num" >
+        <div>
+            <a href="">
+                <button type="button">Buy Now</button>
+            </a>
+            <a href="">
+                <button type="button">Add Cart</button>
+            </a>
+        </div>
+    </div>
+</div>
