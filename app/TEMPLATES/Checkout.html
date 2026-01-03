@@ -1,31 +1,55 @@
 <h1>Check out</h1>
 <form method="post"
-      action="{% if item_id %}{% url 'payment_root_id' item_id %}{% else %}{% url 'payment_root' %}{% endif %}">
-      {%csrf_token%}
-<div>
-    {%for product in item%}
-            <div>
-                <div>
-                    <img src="{{ product.product.image.url}}" width="100px" height="100px" alt="no">
-                </div>
-                <div>
-                    <div>{{product.product.name }}</div>
-                    <div>{{product.product.brand }},{{ product.product.model }}</div>
-                    <div>rating:{{product.product.rating}}</div>
-                    <div>{{product.product.price}}</div>
-                    <div>{{product.quantity}}</div>
-                </div>
-            </div>
-            <div>
-                inp
-            </div>
-    {%endfor%}
+    action="{% if item_id %}{% url 'payment_root_id' item_id %}{% else %}{% url 'payment_root' %}{% endif %}">
+    {%csrf_token%}
     <div>
-        
+        {% if  checkout == 'cart' %}
+        {% for cart_item in item %}
+        <div>
+            <div>
+                <img src="{{ cart_item.product.image.url }}" width="100" height="100" alt="no">
+            </div>
+
+            <div>
+                <div>{{ cart_item.product.name }}</div>
+                <div>{{ cart_item.product.brand }}, {{ cart_item.product.model }}</div>
+                <div>Rating: {{ cart_item.product.rating }}</div>
+                <div>Price: {{ cart_item.product.price }}</div>
+                <div>Quantity: {{ cart_item.quantity }}</div>
+            </div>
+        </div>
+
+        <div>
+            inp
+        </div>
+        {% endfor %}
+        {% else %}
+        <div>
+            <div>
+                <img src="{{ item.image.url }}" width="100" height="100" alt="no">
+            </div>
+
+            <div>
+                <div>{{ item.name }}</div>
+                <div>{{ item.brand }}, {{ item.model }}</div>
+                <div>Rating: {{ item.rating }}</div>
+                <div>Price: {{ item.price }}</div>
+                <div>Quantity: {{ quantity }}</div>
+            </div>
+        </div>
+
+        <div>
+            inp
+        </div>
+        {% endif %}
+
+
+        <div>
+
             <div>
                 <h1>Delivery Adress</h1>
 
-                <label >Full Name</label>
+                <label>Full Name</label>
                 <input type="text" name="name" placeholder="Enter The Name" required><br><br>
 
                 <label>Phone Number</label>
@@ -55,7 +79,7 @@
                 </label><br><br>
             </div>
             <button type="submit">submit</button>
-        </form>
-    </div>
-    <div>Total Amount:{{totalprice}}</div>
+</form>
+</div>
+<div>Total Amount:{{totalprice}}</div>
 </div>

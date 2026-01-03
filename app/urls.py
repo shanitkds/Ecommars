@@ -23,4 +23,8 @@ urlpatterns=[
     path('payment_root',views.payment_root,name='payment_root'),
     path('payment_root_id/<int:id>',views.payment_root,name='payment_root_id'),
     
+    # direct
+    # path('direct_checkout/<int:id>',views.payment_root,name='payment_root_id'),
+    
+    
 ]

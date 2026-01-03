@@ -12,14 +12,16 @@
         <h1>{{product.name}}</h1>
         <h6>Rating:{{product.rating}}</h6>
         <h4>price:{{product.price}}</h4>
-        <input type="num" >
-        <div>
-            <a href="">
-                <button type="button">Buy Now</button>
-            </a>
-            <a href="">
-                <button type="button">Add Cart</button>
-            </a>
-        </div>
+        <form action="{% url 'handil_action' product.id %}" method="post">
+            {% csrf_token %}
+            
+            <div><input type="number" name="quantity" min="1" value="1"></div>
+
+            <button type="submit" name="action" value="cart">Add To Cart</button>
+            <button type="submit" name="action" value="order">Order Now</button>
+        </form>
     </div>
 </div>
+
+
+
